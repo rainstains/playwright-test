@@ -9,5 +9,9 @@
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.27.1"
+  },
+  "dependencies": {
+    "randomstring": "^1.2.3",
+    "unique-names-generator": "^4.7.1"
   }
 }

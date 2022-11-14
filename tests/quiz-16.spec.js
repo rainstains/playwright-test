@@ -1,4 +1,8 @@
+var randomstring = require("randomstring");
+//const { uniqueNamesGenerator, names } = require('unique-names-generator');
+//const randomName = require("uniqueNamesGenerator({ dictionaries: [names] })");
 const { test, expect } = require('@playwright/test');
+
 
 test('Login - Negative', async ({ page }) => {
 
@@ -44,4 +48,47 @@ test('Login - Positive', async ({ page }) => {
 
 });
 
+test('Order Product - Positive', async ({ page }) => {
 
+  const fname = randomstring.generate(6)//uniqueNamesGenerator();
+  const lname = randomstring.generate(6)//uniqueNamesGenerator();
+  const zcode = randomstring.generate({
+    length: 5,
+    charset: 'numeric'
+  });
+  
+  await loginValid(page); // login
+  
+  await page.locator('[data-test="add-to-cart-sauce-labs-backpack"]').click(); // add product to cart
+
+  await expect('.shopping_cart_badge span').toBeDefined()
+
+  await page.locator('css=.shopping_cart_badge').click(); // click cart with 1 
+  await expect(page).toHaveURL('https://www.saucedemo.com/cart.html'); //expect to change page
+
+  await page.locator('[data-test="checkout"]').click(); // click checkout
+  await expect(page).toHaveURL('https://www.saucedemo.com/checkout-step-one.html'); //expect to change page
+  
+  //fill data (dinamis)
+  await page.locator('[data-test="firstName"]').fill(fname);
+  await page.locator('[data-test="lastName"]').fill(lname);
+  await page.locator('[data-test="postalCode"]').fill(zcode);
+
+  await page.locator('[data-test="continue"]').click(); //click continue
+  await expect(page).toHaveURL('https://www.saucedemo.com/checkout-step-two.html'); //expect to change page
+
+  await page.locator('[data-test="finish"]').click(); //click finish
+  await expect(page).toHaveURL('https://www.saucedemo.com/checkout-complete.html'); //expect to change page
+
+
+  const thankText = page.getByRole('heading', { name: 'THANK YOU FOR YOUR ORDER' });
+  await expect(thankText).toBeVisible();
+
+  const thankDesc = page.getByText('Your order has been dispatched, and will arrive just as fast as the pony can get')
+  await expect(thankDesc).toBeVisible()
+
+  const image = page.getByRole('img', { name: 'Pony Express' });
+  await expect(image).toBeVisible()
+
+  await page.close()
+})

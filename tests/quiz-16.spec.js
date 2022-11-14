@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 
-test('Login - Negative Test Case', async ({ page }) => {
+test('Login - Negative', async ({ page }) => {
 
   await page.goto('https://www.saucedemo.com/');
 
@@ -20,8 +20,7 @@ test('Login - Negative Test Case', async ({ page }) => {
 
 });
 
-
-test('Login - Positive Test Case', async ({ page }) => {
+async function loginValid(page) {
 
   await page.goto('https://www.saucedemo.com/');
 
@@ -35,6 +34,14 @@ test('Login - Positive Test Case', async ({ page }) => {
 
   await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html');
 
+}
+
+test('Login - Positive', async ({ page }) => {
+
+  await loginValid(page);
+
   await page.close();
 
 });
+
+

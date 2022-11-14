@@ -1,15 +1,6 @@
 var randomstring = require("randomstring");
 const { test, expect } = require('@playwright/test');
-//import { uniqueNamesGenerator, adjectives, colors, animals } from 'unique-names-generator';
 const { uniqueNamesGenerator, names } = require('unique-names-generator');
-
-
-// const shortName = uniqueNamesGenerator({
-//   dictionaries: [adjectives, animals, colors], // colors can be omitted here as not used
-//   length: 2
-// }); // big-donkey
-
-
 
 
 test('Login - Negative', async ({ page }) => {
@@ -58,15 +49,12 @@ test('Login - Positive', async ({ page }) => {
 
 test('Order Product - Positive', async ({ page }) => {
 
-  //const fname = randomstring.generate(6)
-  const lname = randomstring.generate(6)
+  const fname = uniqueNamesGenerator({dictionaries: [names]}); 
+  const lname = uniqueNamesGenerator({dictionaries: [names]});
   const zcode = randomstring.generate({
     length: 5,
     charset: 'numeric'
   });
-
-  const fname = uniqueNamesGenerator({ dictionaries: [names] }); // big_red_donkey
-  
 
   await loginValid(page); // login
   
@@ -85,15 +73,15 @@ test('Order Product - Positive', async ({ page }) => {
   await page.locator('[data-test="lastName"]').fill(lname);
   await page.locator('[data-test="postalCode"]').fill(zcode);
 
-  // await page.locator('[data-test="continue"]').click(); //click continue
-  // await expect(page).toHaveURL('https://www.saucedemo.com/checkout-step-two.html'); //expect to change page
+  await page.locator('[data-test="continue"]').click(); //click continue
+  await expect(page).toHaveURL('https://www.saucedemo.com/checkout-step-two.html'); //expect to change page
 
-  // await page.locator('[data-test="finish"]').click(); //click finish
-  // await expect(page).toHaveURL('https://www.saucedemo.com/checkout-complete.html'); //expect to change page
+  await page.locator('[data-test="finish"]').click(); //click finish
+  await expect(page).toHaveURL('https://www.saucedemo.com/checkout-complete.html'); //expect to change page
 
-  // await expect(page.getByRole('heading', { name: 'THANK YOU FOR YOUR ORDER' })).toBeVisible();
-  // await expect(page.getByText(/Your order has been dispatched/)).toBeVisible()
-  // await expect(page.getByRole('img', { name: 'Pony Express' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'THANK YOU FOR YOUR ORDER' })).toBeVisible();
+  await expect(page.getByText(/Your order has been dispatched/)).toBeVisible()
+  await expect(page.getByRole('img', { name: 'Pony Express' })).toBeVisible()
 
-  // await page.close()
+  await page.close()
 })
